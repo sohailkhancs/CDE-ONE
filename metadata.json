@@ -1,0 +1,8 @@
+{
+  "name": "CDE-ONE",
+  "description": "A comprehensive Common Data Environment (CDE) combining BIM visualization, ISO 19650 document management, and field productivity tools inspired by Dalux and Procore.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

@@ -1,0 +1,8 @@
+ ---
+  Test Login Credentials
+  ┌────────────────────┬──────────┬─────────────────┐
+  │       Email        │ Password │      Role       │
+  ├────────────────────┼──────────┼─────────────────┤
+  │ admin@skyline.com  │ admin123 │ Admin           │
+  ├────────────────────┼──────────┼─────────────────┤
+  │ alex.m@skyline.com │ pm123    │ Project Manager
