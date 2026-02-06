@@ -608,7 +608,7 @@ async def get_project_team(
     """Get all team members assigned to a project."""
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
-        raise HTTP Exception(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail="Project not found")
     
     team_members = db.query(TeamMember).filter(TeamMember.project_id == project_id).all()
     
