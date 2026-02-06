@@ -41,7 +41,21 @@ export const PROJECTS: Project[] = [
       defects: 34,
       inspections: 156,
       tasks: { total: 342, completed: 233 }
-    }
+    },
+    // Extended Details
+    projectNumber: '2401-CGH',
+    squareFeet: 125000,
+    template: 'Hospital Template',
+    isActive: true,
+    address: '123 Oxford Road',
+    city: 'Manchester',
+    state: '',
+    zip: 'M13 9WL',
+    country: 'United Kingdom',
+    timezone: '(GMT+00:00) London',
+    phone: '+44 161 276 1234',
+    region: 'EMEA',
+    language: 'English - UK'
   },
   {
     id: 'proj-002',

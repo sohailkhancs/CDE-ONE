@@ -28,20 +28,30 @@ import { PROJECTS, PROJECT_TYPE_INFO, PROJECT_STATUS_INFO } from '../../../data/
 import type { Project, ProjectType, ProjectStatus } from '../../../types/projects';
 import { useAuth } from '../../../features/auth';
 
+import CreateProjectModal from '../components/CreateProjectModal';
+
 const ProjectHub: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   // State
+  const [projects, setProjects] = useState<Project[]>(() => {
+    const stored = localStorage.getItem('cde_projects');
+    const localProjects = stored ? JSON.parse(stored) : [];
+    // Combine local projects (newly created) with static demo projects
+    // Put local projects first so they appear at the top
+    return [...localProjects, ...PROJECTS];
+  });
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<ProjectType | 'all'>('all');
   const [filterStatus, setFilterStatus] = useState<ProjectStatus | 'all'>('all');
   const [sortBy, setSortBy] = useState<'recent' | 'name' | 'progress'>('recent');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Filter and sort projects
   const filteredProjects = useMemo(() => {
-    let filtered = PROJECTS.filter((project) => {
+    let filtered = projects.filter((project) => {
       // Search filter
       const matchesSearch =
         project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -72,7 +82,30 @@ const ProjectHub: React.FC = () => {
     });
 
     return filtered;
-  }, [searchQuery, filterType, filterStatus, sortBy]);
+  }, [projects, searchQuery, filterType, filterStatus, sortBy]);
+
+  const handleCreateProject = (newProjectData: Partial<Project>) => {
+    const newProject: Project = {
+      id: `proj-${Date.now()}`,
+      ...newProjectData as Project,
+      // Ensure complex objects are initialized if missing from form data
+      team: newProjectData.team || { total: 1, members: [] },
+      stats: newProjectData.stats || { documents: 0, rfis: 0, defects: 0, inspections: 0, tasks: { total: 0, completed: 0 } },
+      timeline: newProjectData.timeline || { start: new Date().toISOString(), end: new Date().toISOString(), daysRemaining: 0 },
+      budget: newProjectData.budget || { total: 0, spent: 0, currency: 'USD' }
+    };
+
+    // Save to local storage
+    const stored = localStorage.getItem('cde_projects');
+    const localProjects = stored ? JSON.parse(stored) : [];
+    localStorage.setItem('cde_projects', JSON.stringify([newProject, ...localProjects]));
+
+    setProjects(prev => [newProject, ...prev]);
+
+    // Close modal and navigate to the new project dashboard
+    setIsCreateModalOpen(false);
+    navigate(`/project/${newProject.id}`);
+  };
 
   const getProjectHealthColor = (project: Project) => {
     if (project.progress >= 80) return 'text-emerald-600 bg-emerald-50';
@@ -112,13 +145,17 @@ const ProjectHub: React.FC = () => {
               </h1>
               <p className="text-slate-500 mt-1">Select a project to access the Common Data Environment</p>
             </div>
-            <button
-              onClick={() => navigate('/docs')}
-              className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-red-900/20 transition-all"
-            >
-              <Plus size={18} className="mr-2" />
-              New Project
-            </button>
+
+            {/* Create Project Button - Admin Only */}
+            {user?.role === 'Admin' && (
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-red-900/20 transition-all active:scale-95"
+              >
+                <Plus size={18} className="mr-2" />
+                New Project
+              </button>
+            )}
           </div>
 
           {/* Filters and Search */}
@@ -442,6 +479,13 @@ const ProjectHub: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Create Project Modal */}
+      <CreateProjectModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateProject}
+      />
     </div>
   );
 };

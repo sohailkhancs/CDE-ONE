@@ -1,0 +1,13 @@
+Updated khan.m@cde-one to khan.m@cde-one.com
+Reassigned 4 documents from u-admin-001 to user-001
+Error deleting admin: (psycopg2.errors.ForeignKeyViolation) update or delete on table "users" violates foreign key constraint "document_versions_author_id_fkey" on table "document_versions"
+DETAIL:  Key (id)=(u-admin-001) is still referenced from table "document_versions".
+
+[SQL: DELETE FROM users WHERE id = %(tid)s]
+[parameters: {'tid': 'u-admin-001'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Final User List:
+ - admin@skyline.com (Admin)
+ - alex.m@skyline.com (Project Manager)
+ - admin@cde-one.com (Admin)
+ - khan.m@cde-one.com (Project Manager)

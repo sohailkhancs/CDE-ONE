@@ -1,0 +1,5 @@
+Total users: 4
+ID: u-admin-001 | Email: 'admin@skyline.com' | Role: Admin
+ID: u-pm-001 | Email: 'alex.m@skyline.com' | Role: Project Manager
+ID: user-001 | Email: 'admin@cde-one.com' | Role: Admin
+ID: user-ca4c0632-b3b3-4558-be98-723998e385d5 | Email: 'khan.m@cde-one' | Role: Project Manager

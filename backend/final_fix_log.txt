@@ -1,0 +1,13 @@
+Updated khan email. Rows affected: 1
+Deleted admin@styline. Rows affected: 0
+Failed to delete admin@skyline.com: (psycopg2.errors.ForeignKeyViolation) update or delete on table "users" violates foreign key constraint "documents_author_id_fkey" on table "documents"
+DETAIL:  Key (id)=(u-admin-001) is still referenced from table "documents".
+
+[SQL: DELETE FROM users WHERE email = 'admin@skyline.com']
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Transaction committed.
+Current Users:
+  admin@skyline.com (Admin)
+  alex.m@skyline.com (Project Manager)
+  admin@cde-one.com (Admin)
+  khan.m@cde-one (Project Manager)

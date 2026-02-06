@@ -42,6 +42,7 @@ app.add_middleware(
         "http://localhost:3000",  # Alternative dev server
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
+        "https://cde-one.netlify.app"  # <--- ADD THIS LINE
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -75,10 +76,11 @@ def root():
 
 
 # Import and include routers
-from app.routers import auth, documents
+from app.routers import auth, documents, admin
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(documents.router, prefix="/api/v1/documents", tags=["Documents"])
+app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
 
 
 if __name__ == "__main__":

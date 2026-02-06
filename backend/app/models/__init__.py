@@ -3,6 +3,7 @@ from app.models.project import Project
 from app.models.document import Document, DocumentVersion
 from app.models.inspection import Inspection, ChecklistItem
 from app.models.task import PlannedTask, FieldTask
+from app.models.team import TeamMember, AuditLog
 
 __all__ = [
     "User",
@@ -13,4 +14,6 @@ __all__ = [
     "ChecklistItem",
     "PlannedTask",
     "FieldTask",
+    "TeamMember",
+    "AuditLog",
 ]

@@ -1,0 +1,9 @@
+Error: (psycopg2.errors.UndefinedColumn) column projects.owner_id does not exist
+LINE 1: ..._description, projects.status AS projects_status, projects.o...
+                                                             ^
+
+[SQL: SELECT projects.id AS projects_id, projects.name AS projects_name, projects.code AS projects_code, projects.description AS projects_description, projects.status AS projects_status, projects.owner_id AS projects_owner_id, projects.project_number AS projects_project_number, projects.originator AS projects_originator, projects.volume_zone AS projects_volume_zone, projects.classification AS projects_classification, projects.client_name AS projects_client_name, projects.location AS projects_location, projects.start_date AS projects_start_date, projects.target_completion_date AS projects_target_completion_date, projects.contract_value AS projects_contract_value, projects.visibility AS projects_visibility, projects.created_by AS projects_created_by, projects.created_at AS projects_created_at, projects.updated_at AS projects_updated_at 
+FROM projects 
+WHERE %(param_1)s = projects.owner_id]
+[parameters: {'param_1': 'u-admin-001'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)

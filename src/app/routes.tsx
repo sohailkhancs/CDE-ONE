@@ -20,6 +20,10 @@ const AIAssistant = React.lazy(() => import('../features/ai/routes/AIAssistant')
 const Team = React.lazy(() => import('../features/team/routes/Team'));
 const DailyReports = React.lazy(() => import('../features/reports/routes/DailyReports'));
 const Settings = React.lazy(() => import('../features/settings/routes/Settings'));
+// Admin features
+const AdminDashboard = React.lazy(() => import('../features/admin/routes/AdminDashboard'));
+const UserManagement = React.lazy(() => import('../features/admin/routes/UserManagement'));
+
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useAuth();
@@ -46,6 +50,12 @@ export const AppRoutes = () => {
             <Route path="field" element={<Field />} />
             <Route path="inspections" element={<Inspections />} />
           </Route>
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+
           {/* Legacy routes for backward compatibility */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/docs" element={<Documents />} />
@@ -61,6 +71,6 @@ export const AppRoutes = () => {
 
         <Route path="*" element={<Navigate to="/projects" replace />} />
       </Routes>
-    </Suspense>
+    </Suspense >
   );
 };

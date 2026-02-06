@@ -1,5 +1,5 @@
 
-export type Role = 'Admin' | 'Project Manager' | 'Viewer';
+export type Role = 'Admin' | 'Project Manager' | 'Team Lead' | 'Discipline Lead' | 'Viewer';
 
 export interface User {
   id: string;
@@ -7,6 +7,13 @@ export interface User {
   email: string;
   role: Role;
   avatar?: string;
+  organization?: string;
+  discipline?: string;
+  iso_role?: string;
+  phone?: string;
+  job_title?: string;
+  department?: string;
+  is_active?: boolean;
 }
 
 // ISO 19650 Document Statuses
@@ -29,6 +36,8 @@ export type Permission = 'view' | 'download' | 'upload' | 'update' | 'delete' | 
 export const RolePermissions: Record<Role, Permission[]> = {
   Admin: ['view', 'download', 'upload', 'update', 'delete', 'promote', 'share'],
   'Project Manager': ['view', 'download', 'upload', 'update', 'promote', 'share'],
+  'Team Lead': ['view', 'download', 'upload', 'update', 'promote', 'share'],
+  'Discipline Lead': ['view', 'download', 'upload', 'update', 'share'],
   Viewer: ['view', 'download'],
 };
 

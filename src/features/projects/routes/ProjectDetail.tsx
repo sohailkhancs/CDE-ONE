@@ -46,7 +46,12 @@ const ProjectDetail: React.FC = () => {
   const { user } = useAuth();
 
   // Find project
-  const project = useMemo(() => PROJECTS.find((p) => p.id === projectId), [projectId]);
+  const project = useMemo(() => {
+    const stored = localStorage.getItem('cde_projects');
+    const localProjects = stored ? JSON.parse(stored) : [];
+    const allProjects = [...(localProjects as Project[]), ...PROJECTS];
+    return allProjects.find((p) => p.id === projectId);
+  }, [projectId]);
 
   if (!project) {
     return (
@@ -109,7 +114,7 @@ const ProjectDetail: React.FC = () => {
               </div>
             </div>
             <button
-              onClick={() => {/* Toggle favorite */}}
+              onClick={() => {/* Toggle favorite */ }}
               className="text-slate-300 hover:text-yellow-500 transition-colors"
             >
               {project.isFavorite ? <Star className="w-5 h-5 text-yellow-400 fill-current" /> : <Star className="w-5 h-5 text-slate-300" />}
@@ -143,20 +148,18 @@ const ProjectDetail: React.FC = () => {
               <Link
                 key={module.id}
                 to={module.path}
-                className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group ${
-                  isActive
+                className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group ${isActive
                     ? 'bg-red-50 text-red-700 shadow-sm ring-1 ring-red-100'
                     : 'text-slate-600 hover:bg-slate-50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center">
                   <module.icon className={`mr-3 ${isActive ? 'text-red-600' : 'text-slate-400 group-hover:text-slate-600'} size={18}`} />
                   <span className="font-medium text-sm">{module.name}</span>
                 </div>
                 {module.badge && (
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    isActive ? 'bg-red-200 text-red-700' : 'bg-slate-100 text-slate-500'
-                  }`}>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-red-200 text-red-700' : 'bg-slate-100 text-slate-500'
+                    }`}>
                     {module.badge}
                   </span>
                 )}
@@ -199,7 +202,7 @@ const ProjectDetail: React.FC = () => {
               </div>
             </div>
             <button
-              onClick={() => {/* Logout */}}
+              onClick={() => {/* Logout */ }}
               className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
             >
               <LogOut size={16} />

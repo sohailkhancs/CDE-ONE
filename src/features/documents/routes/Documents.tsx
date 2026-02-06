@@ -15,6 +15,7 @@ import {
   Share2,
   Loader2,
   FileCode,
+  Menu,
   Image as ImageIcon,
   Layout,
   List,
@@ -150,6 +151,7 @@ const DocsView: React.FC = () => {
   const [isPromoting, setIsPromoting] = useState(false);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [isRbacGuideOpen, setIsRbacGuideOpen] = useState(false);
+  const [isTreeExpanded, setIsTreeExpanded] = useState(true);
 
   // Confirmation Modal State
   const [confirmationModal, setConfirmationModal] = useState<{
@@ -328,50 +330,65 @@ const DocsView: React.FC = () => {
     <div className="flex h-full bg-slate-50 relative overflow-hidden font-sans">
 
       {/* 1. LEFT SIDEBAR: CDE Structure (Tree View) */}
-      <div className="w-72 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 z-10 transition-width duration-300">
-        <div className="h-16 flex items-center px-6 border-b border-slate-100 bg-gradient-to-r from-white to-slate-50">
-          <div className="flex items-center space-x-2 text-slate-900 font-extrabold tracking-tight">
-            <div className="p-1.5 bg-red-100 rounded-lg">
-              <FolderTree size={18} className="text-red-600" />
+      <div className={`bg-white border-r border-slate-200 flex flex-col flex-shrink-0 z-10 transition-all duration-300 ${isTreeExpanded ? 'w-72' : 'w-16'}`}>
+        <div className={`h-16 flex items-center ${isTreeExpanded ? 'px-6 justify-between' : 'justify-center'} border-b border-slate-100 bg-gradient-to-r from-white to-slate-50`}>
+          {isTreeExpanded && (
+            <div className="flex items-center space-x-2 text-slate-900 font-extrabold tracking-tight">
+              <div className="p-1.5 bg-red-100 rounded-lg">
+                <FolderTree size={18} className="text-red-600" />
+              </div>
+              <span className="text-lg">CDE Explorer</span>
             </div>
-            <span className="text-lg">CDE Explorer</span>
-          </div>
+          )}
+
+          {/* Toggle Button */}
+          <button
+            onClick={() => setIsTreeExpanded(!isTreeExpanded)}
+            className={`p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all`}
+            title={isTreeExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
+          >
+            <Menu size={20} />
+          </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1.5 scrollbar-thin scrollbar-thumb-slate-200">
+        <nav className="flex-1 overflow-y-auto py-6 space-y-1.5 scrollbar-thin scrollbar-thumb-slate-200 px-2">
           {ISO_FOLDERS.map((folder) => {
             const isActive = activeFolder === folder.id;
             const count = counts.folderCounts[folder.id] || 0;
             return (
-              <div key={folder.id} className="relative">
+              <div key={folder.id} className="relative group/item">
                 <button
-                  onClick={() => { setActiveFolder(folder.id); setActiveSubFolder(null); }}
-                  className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden ${isActive ? 'bg-red-50 text-red-700 shadow-sm ring-1 ring-red-100' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  onClick={() => { setActiveFolder(folder.id); setActiveSubFolder(null); if (!isTreeExpanded) setIsTreeExpanded(true); }}
+                  className={`w-full flex items-center ${isTreeExpanded ? 'justify-between px-3' : 'justify-center px-1'} py-3 rounded-xl text-sm font-medium transition-all duration-200 relative overflow-hidden ${isActive ? 'bg-red-50 text-red-700 shadow-sm ring-1 ring-red-100' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
+                  title={!isTreeExpanded ? folder.name : ''}
                 >
-                  <div className="flex items-center flex-1 min-w-0 z-10">
-                    <span className={`mr-3 p-1.5 rounded-lg transition-colors ${isActive ? 'bg-white text-red-600 shadow-sm' : 'bg-slate-100 text-slate-400 group-hover:bg-white group-hover:text-slate-600'}`}>
+                  <div className={`flex items-center flex-1 min-w-0 z-10 ${!isTreeExpanded && 'justify-center'}`}>
+                    <span className={`p-1.5 rounded-lg transition-colors ${isActive ? 'bg-white text-red-600 shadow-sm' : 'bg-slate-100 text-slate-400 group-hover/item:bg-white group-hover/item:text-slate-600'} ${isTreeExpanded ? 'mr-3' : ''}`}>
                       {folder.id === 'wip' && <Plus size={16} />}
                       {folder.id === 'shared' && <Share2 size={16} />}
                       {folder.id === 'published' && <CheckCircle size={16} />}
                       {folder.id === 'archive' && <Archive size={16} />}
                     </span>
-                    <span className="truncate font-semibold">{folder.name}</span>
+                    {isTreeExpanded && <span className="truncate font-semibold">{folder.name}</span>}
                   </div>
 
-                  <div className="flex items-center space-x-2 z-10">
-                    {/* Count Badge */}
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${isActive ? 'bg-red-200 text-red-800' : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'}`}>
-                      {count}
-                    </span>
-                    {isActive && <span className="text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded font-mono font-bold tracking-wider opacity-80">{currentISOCode}</span>}
-                  </div>
+                  {isTreeExpanded && (
+                    <div className="flex items-center space-x-2 z-10">
+                      {/* Count Badge */}
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${isActive ? 'bg-red-200 text-red-800' : 'bg-slate-100 text-slate-500 group-hover/item:bg-slate-200'}`}>
+                        {count}
+                      </span>
+                      {isActive && <span className="text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded font-mono font-bold tracking-wider opacity-80">{currentISOCode}</span>}
+                    </div>
+                  )}
                 </button>
 
-                {folder.subfolders && isActive && (
+                {/* Collapsed Sub-menu Popup (Optional enhancement) could go here but keeping simple for now */}
+                {folder.subfolders && isActive && isTreeExpanded && (
                   <div className="mt-2 mb-3 ml-4 space-y-1 border-l-2 border-slate-100 pl-4 py-1 animate-fadeIn">
                     <button
-                      onClick={() => setActiveSubFolder(null)}
+                      onClick={(e) => { e.stopPropagation(); setActiveSubFolder(null); }}
                       className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-lg transition-all ${!activeSubFolder ? 'font-bold text-slate-800 bg-slate-100' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'}`}
                     >
                       <span>All Disciplines</span>
@@ -382,7 +399,7 @@ const DocsView: React.FC = () => {
                       return (
                         <button
                           key={sub}
-                          onClick={() => setActiveSubFolder(sub)}
+                          onClick={(e) => { e.stopPropagation(); setActiveSubFolder(sub); }}
                           className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-lg transition-all ${activeSubFolder === sub ? 'font-bold text-slate-800 bg-slate-100 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'}`}
                         >
                           <span className="truncate">{sub}</span>
@@ -402,41 +419,51 @@ const DocsView: React.FC = () => {
         </nav>
 
         {/* Filters Info */}
-        <div className="p-4 mx-4 mb-4 bg-slate-50 border border-slate-200 rounded-2xl">
-          <div className="flex items-center space-x-2 text-slate-500 mb-2">
-            <Filter size={14} />
-            <span className="text-xs font-bold uppercase tracking-wider">Active Filters</span>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-400">State:</span>
-              <span className="font-medium text-slate-700">{currentFolder?.label}</span>
+        {isTreeExpanded ? (
+          <div className="p-4 mx-4 mb-4 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div className="flex items-center space-x-2 text-slate-500 mb-2">
+              <Filter size={14} />
+              <span className="text-xs font-bold uppercase tracking-wider">Active Filters</span>
             </div>
-            {activeSubFolder && (
-              <div className="flex justify-between text-xs animate-fadeIn">
-                <span className="text-slate-400">Discipline:</span>
-                <span className="font-medium text-slate-700">{activeSubFolder}</span>
+            <div className="space-y-1">
+              <div className="flex justify-between text-xs">
+                <span className="text-slate-400">State:</span>
+                <span className="font-medium text-slate-700">{currentFolder?.label}</span>
               </div>
-            )}
+              {activeSubFolder && (
+                <div className="flex justify-between text-xs animate-fadeIn">
+                  <span className="text-slate-400">Discipline:</span>
+                  <span className="font-medium text-slate-700">{activeSubFolder}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="mx-auto mb-4 p-2 bg-slate-50 rounded-xl" title="Filters Active">
+            <Filter size={16} className="text-slate-400" />
+          </div>
+        )}
 
         {/* RBAC Info Panel */}
-        <div className="px-4">
-          <RBACInfoPanel compact />
-        </div>
+        {isTreeExpanded && (
+          <div className="px-4">
+            <RBACInfoPanel compact />
+          </div>
+        )}
 
         {/* Storage Usage / Info */}
-        <div className="p-5 border-t border-slate-100 bg-slate-50/30">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-2">
-            <span>Storage Usage</span>
-            <span>75%</span>
+        {isTreeExpanded && (
+          <div className="p-5 border-t border-slate-100 bg-slate-50/30">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-2">
+              <span>Storage Usage</span>
+              <span>75%</span>
+            </div>
+            <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden shadow-inner">
+              <div className="h-full bg-gradient-to-r from-slate-700 to-slate-900 w-3/4 rounded-full"></div>
+            </div>
+            <p className="mt-2 text-[10px] text-slate-400 font-medium">1.2 TB of 2.0 TB used</p>
           </div>
-          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden shadow-inner">
-            <div className="h-full bg-gradient-to-r from-slate-700 to-slate-900 w-3/4 rounded-full"></div>
-          </div>
-          <p className="mt-2 text-[10px] text-slate-400 font-medium">1.2 TB of 2.0 TB used</p>
-        </div>
+        )}
       </div>
 
       {/* 2. MAIN CONTENT */}
@@ -463,11 +490,10 @@ const DocsView: React.FC = () => {
             </button>
 
             <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl border bg-slate-50">
-              <div className={`w-2 h-2 rounded-full ${
-                user?.role === 'Admin' ? 'bg-red-500' :
+              <div className={`w-2 h-2 rounded-full ${user?.role === 'Admin' ? 'bg-red-500' :
                 user?.role === 'Project Manager' ? 'bg-blue-500' :
-                'bg-slate-400'
-              }`}></div>
+                  'bg-slate-400'
+                }`}></div>
               <span className="text-xs font-bold text-slate-700">{user?.role || 'Guest'}</span>
               <span className="text-[10px] text-slate-400 border-l border-slate-200 pl-2">
                 {user?.role === 'Admin' && 'Full Access'}
@@ -817,8 +843,8 @@ const DocsView: React.FC = () => {
                             <span className="font-semibold text-slate-700">{version.author}</span>
                             <span className="mx-1 text-slate-300">•</span>
                             <span className={`${version.status === 'S4' ? 'text-green-600 font-medium' :
-                                version.status === 'S5' ? 'text-slate-500' :
-                                  version.status.startsWith('S') ? 'text-blue-600' : 'text-slate-500'
+                              version.status === 'S5' ? 'text-slate-500' :
+                                version.status.startsWith('S') ? 'text-blue-600' : 'text-slate-500'
                               }`}>
                               {version.status}
                             </span>

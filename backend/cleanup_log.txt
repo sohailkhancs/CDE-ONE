@@ -1,0 +1,15 @@
+Found target user admin@skyline.com (ID: u-admin-001). Starting cleanup...
+Reassigned 10 document_versions.
+Reassigned 0 team_members (assigned_by).
+Deleted 0 team_members records.
+Reassigned 0 inspections.
+Reassigned 0 audit_logs.
+Reassigned 0 projects (created_by).
+Reassigned 4 documents.
+Deleted user admin@skyline.com. Rows affected: 1
+Transaction COMMITTED.
+
+Final User List:
+- alex.m@skyline.com (Project Manager)
+- admin@cde-one.com (Admin)
+- khan.m@cde-one.com (Project Manager)

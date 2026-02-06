@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Menu,
   LogOut,
+  Shield,
   Map as MapIcon // Keep generic map just in case
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -32,6 +33,7 @@ const MENU_ITEMS = [
   { path: '/inspections', label: 'Inspections', icon: ClipboardCheck },
   { path: '/reports', label: 'Daily Reports', icon: NotebookPen },
   { path: '/team', label: 'Team', icon: Users, roles: ['Admin', 'Project Manager'] },
+
   { path: '/ai', label: 'AI Assistant', icon: Sparkles },
   { path: '/settings', label: 'Settings', icon: Sliders, roles: ['Admin'] },
 ];
@@ -133,10 +135,6 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
             >
               <Menu size={20} />
             </button>
-            <div className="hidden sm:flex items-center space-x-2">
-              <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] font-bold text-slate-500">ST-P2</span>
-              <span className="text-sm font-semibold text-slate-700">Skyline Tower Phase 2</span>
-            </div>
           </div>
 
           <div className="flex items-center space-x-4">

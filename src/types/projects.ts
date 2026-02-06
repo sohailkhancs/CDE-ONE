@@ -46,6 +46,21 @@ export interface Project {
   coverImage?: string;
   lastAccessed?: string;
   isFavorite?: boolean;
+
+  // Extended Details for Create Project Form
+  projectNumber?: string;
+  squareFeet?: number;
+  template?: string;
+  isActive?: boolean;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  timezone?: string;
+  phone?: string;
+  region?: string;
+  language?: string;
 }
 
 export interface ProjectMember {
