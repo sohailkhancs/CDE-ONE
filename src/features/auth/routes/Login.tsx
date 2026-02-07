@@ -56,7 +56,7 @@ const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen font-sans bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden transition-all">
 
       {/* 
         --------------------------------------------------------------------------
@@ -65,18 +65,17 @@ const LoginView: React.FC = () => {
       */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100"></div>
 
-      {/* Animated Orbs */}
+      {/* Animated Orbs - Adjusted for performance/visibility on mobile */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-red-300/12 via-rose-400/8 to-red-400/12 rounded-full blur-[120px] animate-pulse"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tr from-slate-300/15 via-gray-300/10 to-slate-400/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-      <div className="absolute top-[40%] left-[30%] w-[40%] h-[40%] bg-gradient-to-br from-red-400/8 via-rose-300/6 to-red-500/8 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '3s' }}></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-red-400/4 via-slate-400/4 to-rose-400/4 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-white via-transparent to-transparent z-0 md:hidden"></div>
 
       <style>{`
         :root {
           --primary-color: ${theme.primary};
         }
         
-        /* The Custom Tab Shape */
+        /* The Custom Tab Shape - DESKTOP ONLY */
         .tab-extension {
             position: absolute;
             left: -80px;
@@ -150,14 +149,14 @@ const LoginView: React.FC = () => {
         MAIN CARD CONTAINER
         --------------------------------------------------------------------------
       */}
-      <div className="relative z-10 w-full max-w-6xl flex shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-[40px] overflow-hidden bg-white min-h-[650px]">
+      <div className="relative z-10 w-full max-w-6xl flex flex-col md:flex-row shadow-[0_10px_40px_rgba(0,0,0,0.08)] md:shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-[24px] md:rounded-[40px] overflow-hidden bg-white min-h-[auto] md:min-h-[650px]">
 
         {/* 
           --------------------
-          LEFT PANEL (RED)
+          LEFT PANEL (RED) - DESKTOP ONLY
           --------------------
         */}
-        <div className="w-1/2 bg-gradient-to-br from-red-500 via-rose-500 to-red-600 relative flex items-center justify-center p-8 overflow-hidden transition-all duration-500">
+        <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-500 via-rose-500 to-red-600 relative items-center justify-center p-8 overflow-hidden transition-all duration-500">
 
           {/* Decorative overlays */}
           <div className="absolute inset-0 bg-gradient-to-l from-white/30 via-white/10 to-transparent"></div>
@@ -261,10 +260,22 @@ const LoginView: React.FC = () => {
           RIGHT PANEL (WHITE)
           --------------------
         */}
-        <div className="w-1/2 bg-white relative p-[60px] flex flex-col justify-center transition-all duration-300">
+        <div className="w-full md:w-1/2 bg-white relative p-6 md:p-[60px] flex flex-col justify-center transition-all duration-300">
 
-          {/* The Floating Tab Connector */}
-          <div className="tab-extension">
+          {/* MOBILE HEADER - Replaces the left panel on small screens */}
+          <div className="md:hidden flex items-center gap-3 mb-8 pb-4 border-b border-slate-100">
+            <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center shrink-0 shadow-md">
+              <Building2 className="text-white" size={20} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-800 leading-none">CDE-ONE</h2>
+              <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Mobile Access</span>
+            </div>
+          </div>
+
+
+          {/* The Floating Tab Connector (DESKTOP ONLY) */}
+          <div className="hidden md:flex tab-extension">
             {/* LOGIN TAB */}
             <div
               className={`tab-item ${activeTab === 'login' ? 'tab-active' : 'tab-inactive'}`}
@@ -284,15 +295,34 @@ const LoginView: React.FC = () => {
             </div>
           </div>
 
+          {/* MOBILE TAB SWITCHER */}
+          <div className="md:hidden flex p-1 bg-slate-100 rounded-xl mb-6 relative">
+            <div
+              className={`absolute inset-y-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm transition-all duration-300 ease-out ${activeTab === 'login' ? 'left-1' : 'left-[calc(50%)]'}`}
+            ></div>
+            <button
+              onClick={() => setActiveTab('login')}
+              className={`flex-1 relative z-10 py-2.5 text-sm font-semibold transition-colors duration-300 ${activeTab === 'login' ? 'text-slate-800' : 'text-slate-500'}`}
+            >
+              Log in
+            </button>
+            <button
+              onClick={() => setActiveTab('contact')}
+              className={`flex-1 relative z-10 py-2.5 text-sm font-semibold transition-colors duration-300 ${activeTab === 'contact' ? 'text-slate-800' : 'text-slate-500'}`}
+            >
+              Contact
+            </button>
+          </div>
+
           {/* 
               CONTENT SWITCHER 
             */}
           {activeTab === 'login' ? (
             // ---------------- LOG IN FORM ----------------
             <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="mb-8">
-                <h1 className="text-4xl font-bold text-red-500 mb-2">Log in</h1>
-                <p className="text-slate-500 text-base">Welcome back! Please enter your details.</p>
+              <div className="mb-6 md:mb-8">
+                <h1 className="text-2xl md:text-4xl font-bold text-red-500 mb-2">Log in</h1>
+                <p className="text-slate-500 text-sm md:text-base">Welcome back! Please enter your details.</p>
               </div>
 
               <form onSubmit={handleLoginSubmit} className="w-full">
@@ -305,7 +335,7 @@ const LoginView: React.FC = () => {
                 )}
 
                 {/* Email Input */}
-                <div className="mb-6">
+                <div className="mb-5 md:mb-6">
                   <label htmlFor="email" className="block mb-2 text-slate-800 font-semibold text-sm">Email</label>
                   <div className="relative">
                     <input
@@ -315,7 +345,7 @@ const LoginView: React.FC = () => {
                       disabled={isLoading}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800"
+                      className="w-full p-3.5 md:p-4 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-base shadow-sm focus:shadow-md bg-slate-50 focus:bg-white"
                       placeholder="Enter your email"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
@@ -325,7 +355,7 @@ const LoginView: React.FC = () => {
                 </div>
 
                 {/* Password Input */}
-                <div className="mb-6">
+                <div className="mb-5 md:mb-6">
                   <label htmlFor="password" className="block mb-2 text-slate-800 font-semibold text-sm">Password</label>
                   <div className="relative">
                     <input
@@ -335,13 +365,13 @@ const LoginView: React.FC = () => {
                       disabled={isLoading}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800"
+                      className="w-full p-3.5 md:p-4 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-base shadow-sm focus:shadow-md bg-slate-50 focus:bg-white"
                       placeholder="..........."
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1"
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -349,15 +379,18 @@ const LoginView: React.FC = () => {
                 </div>
 
                 {/* Options */}
-                <div className="flex justify-between items-center mb-8 text-sm">
-                  <label className="flex items-center gap-2 text-slate-500 cursor-pointer">
+                <div className="flex justify-between items-center mb-6 md:mb-8 text-sm">
+                  <label className="flex items-center gap-2 text-slate-500 cursor-pointer select-none">
+                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${rememberMe ? 'bg-red-500 border-red-500' : 'border-slate-300 bg-white'}`}>
+                      {rememberMe && <Check size={12} className="text-white" />}
+                    </div>
                     <input
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 accent-red-500 rounded"
+                      className="hidden" // Custom checkbox for better touch target
                     />
-                    Remember for 30 days
+                    Remember me
                   </label>
                   <button type="button" className="text-red-500 font-semibold hover:text-red-600">
                     Forgot Password?
@@ -368,14 +401,14 @@ const LoginView: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isLoading || !email || !password}
-                  className="w-full py-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl shadow-[0_4px_12px_rgba(239,68,68,0.3)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mb-4"
+                  className="w-full py-3.5 md:py-4 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold rounded-xl shadow-[0_4px_12px_rgba(239,68,68,0.3)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mb-4 text-base md:text-lg"
                 >
                   {isLoading ? 'Signing in...' : 'Sign in'}
                 </button>
 
                 {/* Footer */}
                 <p className="text-center text-slate-500 text-sm mt-6">
-                  Don't have an account? <span onClick={() => setActiveTab('contact')} className="text-red-500 font-semibold cursor-pointer hover:text-red-600">Contact Admin</span>
+                  Don't have an account? <button type="button" onClick={() => setActiveTab('contact')} className="text-red-500 font-semibold cursor-pointer hover:text-red-600 ml-1">Contact Admin</button>
                 </p>
               </form>
             </div>
@@ -384,7 +417,7 @@ const LoginView: React.FC = () => {
             <div className="animate-in fade-in slide-in-from-right-4 duration-500 h-full flex flex-col justify-center">
               {contactSent ? (
                 <div className="text-center py-10">
-                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-in zoom-in duration-300">
                     <Check size={40} className="text-green-500" />
                   </div>
                   <h2 className="text-2xl font-bold text-slate-800 mb-2">Message Sent!</h2>
@@ -393,7 +426,7 @@ const LoginView: React.FC = () => {
               ) : (
                 <>
                   <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-red-500 mb-2">Contact Support</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold text-red-500 mb-2">Contact Support</h1>
                     <p className="text-slate-500 text-sm">Need access or facing issues? Let us know.</p>
                   </div>
 
@@ -408,7 +441,7 @@ const LoginView: React.FC = () => {
                           required
                           value={contactName}
                           onChange={(e) => setContactName(e.target.value)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-sm"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-sm bg-slate-50 focus:bg-white"
                           placeholder="Your Name"
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
@@ -427,7 +460,7 @@ const LoginView: React.FC = () => {
                           required
                           value={contactEmail}
                           onChange={(e) => setContactEmail(e.target.value)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-sm"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-sm bg-slate-50 focus:bg-white"
                           placeholder="your@email.com"
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
@@ -446,7 +479,7 @@ const LoginView: React.FC = () => {
                           rows={3}
                           value={contactMessage}
                           onChange={(e) => setContactMessage(e.target.value)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-sm resize-none"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl outline-none focus:border-red-500 transition-colors text-slate-800 text-sm resize-none bg-slate-50 focus:bg-white"
                           placeholder="How can we help?"
                         ></textarea>
                         <div className="absolute right-4 top-4 text-slate-400 pointer-events-none">
@@ -459,13 +492,14 @@ const LoginView: React.FC = () => {
                     <button
                       type="submit"
                       disabled={!contactName || !contactEmail || !contactMessage}
-                      className="w-full py-3.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mb-4"
+                      className="w-full py-3.5 bg-slate-800 hover:bg-slate-900 active:bg-black text-white font-semibold rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mb-4"
                     >
                       <span>Send Message</span>
                       <Send size={16} />
                     </button>
 
-                    <div className="text-center">
+                    <div className="text-center md:hidden">
+                      {/* Mobile Back Button handled by tab switcher at top usually, but good to have backup */}
                       <button
                         type="button"
                         onClick={() => setActiveTab('login')}
