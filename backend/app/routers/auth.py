@@ -55,6 +55,8 @@ def security_audit_log(
     )
 
     try:
+        # Also print to stdout for cloud logs (Render/Netlify)
+        print(json.dumps(log_entry))
         with open(log_file, "a") as f:
             f.write(json.dumps(log_entry) + "\n")
     except Exception as e:
