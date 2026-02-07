@@ -78,9 +78,9 @@ def root():
 # Import and include routers
 from app.routers import auth, documents, admin
 
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
-app.include_router(documents.router, prefix="/api/v1/documents", tags=["Documents"])
-app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
+app.include_router(auth.router, prefix="/api/v1")
+app.include_router(documents.router, prefix="/api/v1")
+app.include_router(admin.router, prefix="/api/v1")
 
 
 if __name__ == "__main__":
